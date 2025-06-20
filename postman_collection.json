@@ -1,0 +1,199 @@
+{
+  "info": {
+    "_postman_id": "bike-taxi-platform-collection",
+    "name": "Bike Taxi Platform API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User - Get Profile",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/user/profile" }
+    },
+    {
+      "name": "User - Update Profile",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/api/user/profile",
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Name\",\n  \"email\": \"new@email.com\"\n}" }
+      }
+    },
+    {
+      "name": "User - Add Location",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/user/locations",
+        "body": { "mode": "raw", "raw": "{\n  \"type\": \"home\",\n  \"address\": \"123 Main St\",\n  \"latitude\": 12.9,\n  \"longitude\": 77.6,\n  \"landmark\": \"Near Park\"\n}" }
+      }
+    },
+    {
+      "name": "User - Get Locations",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/user/locations" }
+    },
+    {
+      "name": "User - Add SOS Contact",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/user/sos-contacts",
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Mom\",\n  \"phone\": \"+911234567890\",\n  \"relationship\": \"Mother\"\n}" }
+      }
+    },
+    {
+      "name": "User - Get SOS Contacts",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/user/sos-contacts" }
+    },
+    {
+      "name": "Rider - Get Profile",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/rider/profile" }
+    },
+    {
+      "name": "Rider - Update Status",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/api/rider/status",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"online\",\n  \"location\": { \"latitude\": 12.9, \"longitude\": 77.6 }\n}" }
+      }
+    },
+    {
+      "name": "Rider - Get Nearby Rides",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/rider/nearby-rides" }
+    },
+    {
+      "name": "Rider - Accept Ride",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/rider/rides/1/accept"
+      }
+    },
+    {
+      "name": "Rider - Start Ride",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/rider/rides/1/start",
+        "body": { "mode": "raw", "raw": "{\n  \"otp\": \"1234\"\n}" }
+      }
+    },
+    {
+      "name": "Rider - Complete Ride",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/rider/rides/1/complete",
+        "body": { "mode": "raw", "raw": "{\n  \"dropLocation\": { \"latitude\": 12.9, \"longitude\": 77.6 },\n  \"finalFare\": 68,\n  \"distance\": 5.5,\n  \"duration\": 18\n}" }
+      }
+    },
+    {
+      "name": "Rider - Get Earnings",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/rider/earnings" }
+    },
+    {
+      "name": "Ride - Estimate Fare",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "http://localhost:3000/api/rides/estimate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pickup_latitude\": 12.9,\n  \"pickup_longitude\": 77.6,\n  \"drop_latitude\": 12.8,\n  \"drop_longitude\": 77.5\n}"
+        }
+      }
+    },
+    {
+      "name": "Ride - Book Ride",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/rides/book",
+        "body": { "mode": "raw", "raw": "{\n  \"pickup_latitude\": 12.9,\n  \"pickup_longitude\": 77.6,\n  \"pickup_address\": \"A\",\n  \"drop_latitude\": 12.8,\n  \"drop_longitude\": 77.5,\n  \"drop_address\": \"B\"\n}" }
+      }
+    },
+    {
+      "name": "Ride - Get Current Ride",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/rides/current" }
+    },
+    {
+      "name": "Ride - Get Ride History",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/rides/history" }
+    },
+    {
+      "name": "Ride - Cancel Ride",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/rides/1/cancel"
+      }
+    },
+    {
+      "name": "Ride - Trigger SOS",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/rides/1/sos"
+      }
+    },
+    {
+      "name": "Payment - Add Method",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/payments/methods",
+        "body": { "mode": "raw", "raw": "{\n  \"payment_type\": \"upi\",\n  \"payment_details\": \"{\\\"upi_id\\\":\\\"john@upi\\\"}\"\n}" }
+      }
+    },
+    {
+      "name": "Payment - Get Methods",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/payments/methods" }
+    },
+    {
+      "name": "Payment - Process Payment",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/payments/process",
+        "body": { "mode": "raw", "raw": "{\n  \"ride_id\": 1,\n  \"payment_method_id\": 1\n}" }
+      }
+    },
+    {
+      "name": "Rating - Rate Ride",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/ratings/ride",
+        "body": { "mode": "raw", "raw": "{\n  \"ride_id\": 1,\n  \"rating\": 5,\n  \"comment\": \"Great ride!\"\n}" }
+      }
+    },
+    {
+      "name": "Rating - Get Ratings",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/ratings/" }
+    },
+    {
+      "name": "Tracking - Update",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/tracking/update",
+        "body": { "mode": "raw", "raw": "{\n  \"rideId\": 1,\n  \"location\": { \"latitude\": 12.9, \"longitude\": 77.6 },\n  \"speed\": 25,\n  \"heading\": 45\n}" }
+      }
+    },
+    {
+      "name": "Tracking - Get",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/tracking/1" }
+    },
+    {
+      "name": "Admin - Get Pending Riders",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/admin/riders/pending" }
+    },
+    {
+      "name": "Admin - Verify Rider",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:3000/api/admin/riders/1/verify"
+      }
+    },
+    {
+      "name": "Admin - Get Ride Analytics",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/admin/analytics/rides" }
+    },
+    {
+      "name": "Admin - Get Dashboard",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/admin/dashboard" }
+    },
+    {
+      "name": "Health Check",
+      "request": { "method": "GET", "url": "http://localhost:3000/api/health" }
+    }
+  ]
+} 
