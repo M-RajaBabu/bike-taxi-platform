@@ -1,0 +1,44 @@
+# Project Description
+
+## Overview
+The Bike Taxi Platform backend is a comprehensive API system designed to power a ride-hailing service similar to Rapido. It enables users to book bike rides, manage their accounts, track rides in real time, and handle payments securely. The system also supports rider (captain) management, fare calculation, ratings, and admin analytics.
+
+## Core Functionality
+- User and rider registration/login with OTP-based authentication
+- Rider onboarding and document verification
+- Ride booking, assignment, and real-time tracking
+- Dynamic fare calculation and surge pricing
+- Payment processing and management of payment methods
+- Ratings and feedback for rides
+- Emergency SOS and safety features
+- Admin management and analytics
+
+## Problem Solved
+The platform addresses the need for fast, affordable, and safe urban transportation by connecting users with nearby bike riders. It streamlines the process of booking, tracking, and paying for rides, while ensuring safety and transparency for both users and riders.
+
+## Major Modules/Components
+- **User Management:** Registration, login, profile, locations, emergency contacts
+- **Rider Management:** Registration, login, vehicle and document management, status updates
+- **Ride Management:** Booking, assignment, status tracking, history, cancellation
+- **Fare Calculation:** Dynamic fare, surge pricing, promo codes
+- **Payment Processing:** Payment methods, transactions, commission, incentives
+- **Ratings & Feedback:** Two-way rating system for users and riders
+- **Real-Time Tracking:** Live location updates during rides
+- **Admin Panel:** Rider verification, analytics, and system monitoring
+- **Security:** JWT authentication, input validation, rate limiting, SQL injection prevention
+
+## Technologies/Frameworks Used
+- **Node.js** (runtime)
+- **Express.js** (web framework)
+- **SQLite** (database)
+- **JWT** (authentication)
+- **express-validator** (input validation)
+- **Socket.io** (real-time tracking)
+- **Helmet, CORS, Rate Limiting** (security)
+
+## Unique Features
+- Real-time ride tracking and status updates
+- OTP-based secure authentication for both users and riders
+- Dynamic fare calculation with surge pricing and promo code support
+- Emergency SOS feature for user safety
+- Modular, scalable architecture with clear separation of concerns 

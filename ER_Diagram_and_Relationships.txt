@@ -1,0 +1,124 @@
+# Bike Taxi Platform - Table Explanations (No Diagram)
+
+## Table-by-Table Explanation
+
+### 1. `users`
+- **Purpose:** Stores customer information for registration, login, and ride booking.
+- **Fields:** id (PK), phone (UQ), email (UQ), name, password_hash, profile_picture, is_verified, is_active, created_at, updated_at
+- **Relationships:**
+  - 1-to-many: emergency_contacts, locations, ride_requests, payment_methods, payments, ratings, sos_contacts, sos_alerts, promo_code_usage
+
+### 2. `riders`
+- **Purpose:** Stores rider (captain) information, including vehicle and status.
+- **Fields:** id (PK), phone (UQ), email (UQ), name, password_hash, vehicle_number, vehicle_model, vehicle_color, is_verified, is_active, is_online, current_latitude, current_longitude, rating, total_rides, total_earnings, created_at, updated_at
+- **Relationships:**
+  - 1-to-many: documents, ride_requests, rides, payments, ratings, rider_earnings
+
+### 3. `documents`
+- **Purpose:** Stores rider documents (license, RC, insurance, etc.) and their verification status.
+- **Fields:** id (PK), rider_id (FK), document_type, document_number, document_url, is_verified, verified_by (FK), verified_at, expires_at, created_at, updated_at
+- **Relationships:**
+  - Many-to-1: riders
+  - Many-to-1: users (as verifier)
+
+### 4. `emergency_contacts`
+- **Purpose:** Stores emergency contacts for users.
+- **Fields:** id (PK), user_id (FK), name, phone, relationship, is_primary, created_at
+- **Relationships:**
+  - Many-to-1: users
+
+### 5. `locations`
+- **Purpose:** Stores saved and recent locations for users.
+- **Fields:** id (PK), user_id (FK), name, address, latitude, longitude, location_type, is_favorite, created_at
+- **Relationships:**
+  - Many-to-1: users
+
+### 6. `ride_requests`
+- **Purpose:** Stores ride requests, including pickup/drop, status, fare estimate, and assigned rider.
+- **Fields:** id (PK), user_id (FK), pickup_latitude, pickup_longitude, pickup_address, drop_latitude, drop_longitude, drop_address, estimated_distance, estimated_duration, estimated_fare, status, rider_id (FK), actual_distance, actual_duration, actual_fare, surge_multiplier, created_at, updated_at
+- **Relationships:**
+  - Many-to-1: users
+  - Many-to-1: riders (optional)
+  - 1-to-1: rides
+
+### 7. `rides`
+- **Purpose:** Stores actual ride details, including route, fare breakdown, and payment status.
+- **Fields:** id (PK), ride_request_id (FK), user_id (FK), rider_id (FK), pickup_latitude, pickup_longitude, pickup_address, drop_latitude, drop_longitude, drop_address, distance, duration, base_fare, distance_fare, time_fare, surge_fare, total_fare, status, started_at, completed_at, payment_status, created_at, updated_at
+- **Relationships:**
+  - 1-to-1: ride_requests
+  - Many-to-1: users
+  - Many-to-1: riders
+  - 1-to-many: payments, ratings, rider_earnings, promo_code_usage, sos_alerts
+
+### 8. `payment_methods`
+- **Purpose:** Stores user payment methods (card, UPI, wallet, cash).
+- **Fields:** id (PK), user_id (FK), payment_type, payment_details, is_default, is_active, created_at
+- **Relationships:**
+  - Many-to-1: users
+  - 1-to-many: payments
+
+### 9. `payments`
+- **Purpose:** Stores payment transactions for rides.
+- **Fields:** id (PK), ride_id (FK), user_id (FK), rider_id (FK), amount, payment_method_id (FK), payment_type, transaction_id, status, gateway_response, created_at, updated_at
+- **Relationships:**
+  - Many-to-1: rides, users, riders, payment_methods
+
+### 10. `ratings`
+- **Purpose:** Stores ride ratings and feedback (user→rider, rider→user).
+- **Fields:** id (PK), ride_id (FK), rated_by, rated_user_id (FK), rated_rider_id (FK), rating, comment, created_at
+- **Relationships:**
+  - Many-to-1: rides, users, riders
+
+### 11. `fare_structure`
+- **Purpose:** Stores fare calculation parameters (base fare, per km/min, etc.).
+- **Fields:** id (PK), base_fare, per_km_rate, per_minute_rate, minimum_fare, cancellation_fee, is_active, created_at, updated_at
+- **Relationships:**
+  - Used for fare calculation (no direct FK)
+
+### 12. `rider_earnings`
+- **Purpose:** Stores earnings, commission, and incentives for riders per ride.
+- **Fields:** id (PK), rider_id (FK), ride_id (FK), base_amount, commission_percentage, commission_amount, net_amount, incentive_amount, total_amount, payment_status, paid_at, created_at
+- **Relationships:**
+  - Many-to-1: riders, rides
+
+### 13. `promo_codes`
+- **Purpose:** Stores promo/discount codes and their rules.
+- **Fields:** id (PK), code (UQ), description, discount_type, discount_value, minimum_amount, maximum_discount, usage_limit, used_count, valid_from, valid_until, is_active, created_at
+- **Relationships:**
+  - 1-to-many: promo_code_usage
+
+### 14. `promo_code_usage`
+- **Purpose:** Tracks usage of promo codes by users for rides.
+- **Fields:** id (PK), promo_code_id (FK), user_id (FK), ride_id (FK), discount_amount, used_at
+- **Relationships:**
+  - Many-to-1: promo_codes, users, rides
+
+### 15. `sos_contacts`
+- **Purpose:** Stores user emergency contacts for SOS feature.
+- **Fields:** id (PK), user_id (FK), name, phone, relationship, is_primary, created_at
+- **Relationships:**
+  - Many-to-1: users
+
+### 16. `sos_alerts`
+- **Purpose:** Stores triggered SOS alerts during rides.
+- **Fields:** id (PK), user_id (FK), ride_id (FK), latitude, longitude, address, status, resolved_at, created_at
+- **Relationships:**
+  - Many-to-1: users, rides
+
+### 17. `admin_users`
+- **Purpose:** Stores admin accounts for platform management.
+- **Fields:** id (PK), username (UQ), email (UQ), password_hash, role, is_active, created_at, updated_at
+- **Relationships:**
+  - Can verify documents (referenced in documents.verified_by)
+
+---
+
+**Legend:**
+- PK = Primary Key
+- FK = Foreign Key
+- UQ = Unique Key
+- 1-to-many = One-to-many relationship
+- 1-to-1 = One-to-one relationship
+- Many-to-1 = Many-to-one relationship
+
+**This file provides a concise view of all tables, their keys, and relationships for the Bike Taxi Platform backend.** 

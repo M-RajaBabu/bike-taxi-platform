@@ -1,0 +1,323 @@
+# NOTE: Some endpoints may return stub responses until fully implemented.
+
+### Health Check
+GET http://localhost:3000/api/health
+
+# --- AUTHENTICATION ---
+
+### User Registration - Send OTP
+POST http://localhost:3000/api/auth/user/send-otp
+Content-Type: application/json
+
+{
+  "phone": "+919876543210",
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+
+### User Registration - Verify OTP
+POST http://localhost:3000/api/auth/user/verify-otp
+Content-Type: application/json
+
+{
+  "sessionId": "session_123",
+  "otp": "1234"
+}
+
+### User Login
+POST http://localhost:3000/api/auth/user/login
+Content-Type: application/json
+
+{
+  "phone": "+919876543210"
+}
+
+### Rider Registration - Send OTP
+POST http://localhost:3000/api/auth/rider/send-otp
+Content-Type: application/json
+
+{
+  "phone": "+919876543220",
+  "name": "Captain Raj",
+  "email": "captain.raj@example.com",
+  "vehicle_number": "KA01AB1234",
+  "vehicle_model": "Honda Activa",
+  "vehicle_color": "White"
+}
+
+### Rider Registration - Verify OTP
+POST http://localhost:3000/api/auth/rider/verify-otp
+Content-Type: application/json
+
+{
+  "sessionId": "session_456",
+  "otp": "1234"
+}
+
+### Rider Login
+POST http://localhost:3000/api/auth/rider/login
+Content-Type: application/json
+
+{
+  "phone": "+919876543220"
+}
+
+# --- USER APIs ---
+
+### Get User Profile
+GET http://localhost:3000/api/user/profile
+Authorization: Bearer {{USER_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Update User Profile
+PUT http://localhost:3000/api/user/profile
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "name": "John Updated",
+  "email": "john.updated@example.com"
+}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Save User Location
+POST http://localhost:3000/api/user/locations
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "type": "home",
+  "address": "123 Main Street, Koramangala",
+  "latitude": 12.9355,
+  "longitude": 77.6245,
+  "landmark": "Near Forum Mall"
+}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Get User Locations
+GET http://localhost:3000/api/user/locations
+Authorization: Bearer {{USER_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Add Emergency Contact
+POST http://localhost:3000/api/user/sos-contacts
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "name": "Emergency Contact",
+  "phone": "+919876543212",
+  "relationship": "Brother"
+}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+# --- RIDE BOOKING ---
+
+### Get Fare Estimate
+POST http://localhost:3000/api/rides/estimate
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 12.9355,
+    "longitude": 77.6245,
+    "address": "Koramangala"
+  },
+  "dropLocation": {
+    "latitude": 12.9165,
+    "longitude": 77.6101,
+    "address": "BTM Layout"
+  },
+  "rideType": "economy"
+}
+
+### Book Ride
+POST http://localhost:3000/api/rides/book
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "pickupLocation": {
+    "latitude": 12.9355,
+    "longitude": 77.6245,
+    "address": "Koramangala, Near Forum Mall"
+  },
+  "dropLocation": {
+    "latitude": 12.9165,
+    "longitude": 77.6101,
+    "address": "BTM Layout, 2nd Stage"
+  },
+  "rideType": "economy",
+  "paymentMethod": "cash",
+  "promoCode": "FIRST50"
+}
+
+### Get Current Ride
+GET http://localhost:3000/api/rides/current
+Authorization: Bearer {{USER_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Cancel Ride
+POST http://localhost:3000/api/rides/{{RIDE_ID}}/cancel
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "reason": "Changed my mind"
+}
+
+### Trigger SOS
+POST http://localhost:3000/api/rides/{{RIDE_ID}}/sos
+Authorization: Bearer {{USER_JWT}}
+
+# --- RIDE STATUS ---
+
+### Get Ride History
+GET http://localhost:3000/api/rides/history
+Authorization: Bearer {{USER_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Get Ride Details
+GET http://localhost:3000/api/rides/{{RIDE_ID}}
+Authorization: Bearer {{USER_JWT}}
+# NOTE: This endpoint may not be implemented. Comment out if not working.
+
+# --- RIDER APIs ---
+
+### Update Rider Status
+PUT http://localhost:3000/api/rider/status
+Authorization: Bearer {{RIDER_JWT}}
+Content-Type: application/json
+
+{
+  "status": "online",
+  "location": {
+    "latitude": 12.9355,
+    "longitude": 77.6245
+  }
+}
+
+### Get Nearby Ride Requests
+GET http://localhost:3000/api/rider/nearby-rides
+Authorization: Bearer {{RIDER_JWT}}
+
+### Accept Ride Request
+POST http://localhost:3000/api/rider/rides/{{RIDE_ID}}/accept
+Authorization: Bearer {{RIDER_JWT}}
+
+### Start Ride (with OTP)
+POST http://localhost:3000/api/rider/rides/{{RIDE_ID}}/start
+Authorization: Bearer {{RIDER_JWT}}
+Content-Type: application/json
+
+{
+  "otp": "1234"
+}
+
+### Complete Ride
+POST http://localhost:3000/api/rider/rides/{{RIDE_ID}}/complete
+Authorization: Bearer {{RIDER_JWT}}
+Content-Type: application/json
+
+{
+  "dropLocation": {
+    "latitude": 12.9165,
+    "longitude": 77.6101
+  },
+  "finalFare": 68,
+  "distance": 5.5,
+  "duration": 18
+}
+
+### Get Rider Earnings
+GET http://localhost:3000/api/rider/earnings
+Authorization: Bearer {{RIDER_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+# --- RATINGS ---
+
+### Rate Ride
+POST http://localhost:3000/api/ratings/ride
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "rideId": "{{RIDE_ID}}",
+  "rating": 5,
+  "feedback": "Excellent service, safe ride",
+  "tags": ["safe_driving", "polite", "on_time"]
+}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+# --- PAYMENTS ---
+
+### Add Payment Method
+POST http://localhost:3000/api/payments/methods
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "type": "upi",
+  "details": {
+    "upiId": "john@paytm"
+  }
+}
+
+### Get Payment Methods
+GET http://localhost:3000/api/payments/methods
+Authorization: Bearer {{USER_JWT}}
+
+### Process Payment
+POST http://localhost:3000/api/payments/process
+Authorization: Bearer {{USER_JWT}}
+Content-Type: application/json
+
+{
+  "rideId": "{{RIDE_ID}}",
+  "paymentMethodId": 1,
+  "amount": 68
+}
+
+# --- TRACKING ---
+
+### Update Rider Location
+POST http://localhost:3000/api/tracking/update
+Authorization: Bearer {{RIDER_JWT}}
+Content-Type: application/json
+
+{
+  "rideId": "{{RIDE_ID}}",
+  "location": {
+    "latitude": 12.9355,
+    "longitude": 77.6245
+  },
+  "speed": 25,
+  "heading": 45
+}
+
+### Get Real-Time Tracking
+GET http://localhost:3000/api/tracking/{{RIDE_ID}}
+Authorization: Bearer {{USER_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+# --- ADMIN ---
+
+### Get Pending Riders
+GET http://localhost:3000/api/admin/riders/pending
+Authorization: Bearer {{ADMIN_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Verify Rider Documents
+PUT http://localhost:3000/api/admin/riders/{{RIDER_ID}}/verify
+Authorization: Bearer {{ADMIN_JWT}}
+Content-Type: application/json
+
+{
+  "status": "verified"
+}
+# NOTE: This endpoint is a stub and returns a placeholder response.
+
+### Get Ride Analytics
+GET http://localhost:3000/api/admin/analytics/rides
+Authorization: Bearer {{ADMIN_JWT}}
+# NOTE: This endpoint is a stub and returns a placeholder response. 

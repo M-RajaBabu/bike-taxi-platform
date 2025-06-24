@@ -1,0 +1,173 @@
+# API Endpoints Documentation
+
+## Authentication APIs
+
+### User Registration
+- **POST /api/auth/user/send-otp**
+  - Sends OTP to user for registration.
+  - **Request Body:** { "phone": "+919876543210", "name": "John Doe", "email": "john@example.com" }
+  - **Response:** { "success": true, "message": "OTP sent to phone", "sessionId": "session_123" }
+
+- **POST /api/auth/user/verify-otp**
+  - Verifies OTP and completes registration.
+  - **Request Body:** { "sessionId": "session_123", "otp": "1234" }
+  - **Response:** { "success": true, "token": "jwt_token_here", "user": { ... } }
+
+- **POST /api/auth/user/login**
+  - Logs in a user with phone number.
+  - **Request Body:** { "phone": "+919876543210" }
+  - **Response:** { "success": true, "token": "jwt_token_here", "user": { ... } }
+
+### Rider Registration
+- **POST /api/auth/rider/send-otp**
+  - Sends OTP to rider for registration.
+  - **Request Body:** { "phone": "+919876543220", "name": "Captain Raj", ... }
+  - **Response:** { "success": true, "message": "OTP sent to phone", "sessionId": "session_456" }
+
+- **POST /api/auth/rider/verify-otp**
+  - Verifies OTP and completes rider registration.
+  - **Request Body:** { "sessionId": "session_456", "otp": "1234" }
+  - **Response:** { "success": true, "token": "jwt_token_here", "rider": { ... } }
+
+- **POST /api/auth/rider/login**
+  - Logs in a rider with phone number.
+  - **Request Body:** { "phone": "+919876543220" }
+  - **Response:** { "success": true, "token": "jwt_token_here", "rider": { ... } }
+
+## User APIs
+
+- **GET /api/user/profile**
+  - Gets user profile (JWT required).
+  - **Response:** { "success": true, "user": { ... } }
+
+- **PUT /api/user/profile**
+  - Updates user profile (JWT required).
+  - **Request Body:** { "name": "New Name", ... }
+  - **Response:** { "success": true, "user": { ... } }
+
+- **POST /api/user/locations**
+  - Saves a location for the user.
+  - **Request Body:** { "type": "home", "address": "...", "latitude": 12.9, "longitude": 77.6, "landmark": "..." }
+  - **Response:** { "success": true, "location": { ... } }
+
+- **GET /api/user/locations**
+  - Gets saved locations for the user.
+  - **Response:** { "success": true, "locations": [ ... ] }
+
+- **POST /api/user/sos-contacts**
+  - Adds an emergency contact.
+  - **Request Body:** { "name": "Emergency Contact", "phone": "+919876543212", "relationship": "Brother" }
+  - **Response:** { "success": true, "contact": { ... } }
+
+## Ride Booking APIs
+
+- **POST /api/rides/estimate**
+  - Gets fare estimate for a ride.
+  - **Request Body:** { "pickupLocation": { ... }, "dropLocation": { ... }, "rideType": "economy" }
+  - **Response:** { "success": true, "estimate": { ... } }
+
+- **POST /api/rides/book**
+  - Books a ride (JWT required).
+  - **Request Body:** { "pickupLocation": { ... }, "dropLocation": { ... }, "rideType": "economy", "paymentMethod": "cash", "promoCode": "FIRST50" }
+  - **Response:** { "success": true, "rideId": "RIDE123456", "status": "searching", "message": "Finding nearby riders..." }
+
+- **GET /api/rides/current**
+  - Gets current ride status (JWT required).
+  - **Response:** { "success": true, "ride": { ... } }
+
+- **POST /api/rides/:rideId/cancel**
+  - Cancels a ride (JWT required).
+  - **Request Body:** { "reason": "Changed my mind" }
+  - **Response:** { "success": true, "message": "Ride cancelled" }
+
+- **POST /api/rides/:rideId/sos**
+  - Triggers SOS alert (JWT required).
+  - **Response:** { "success": true, "message": "SOS triggered" }
+
+## Ride Status APIs
+
+- **GET /api/rides/history**
+  - Gets ride history (JWT required).
+  - **Response:** { "success": true, "rides": [ ... ] }
+
+- **GET /api/rides/:rideId**
+  - Gets ride details (JWT required).
+  - **Response:** { "success": true, "ride": { ... } }
+
+## Rider APIs
+
+- **PUT /api/rider/status**
+  - Updates rider availability (JWT required).
+  - **Request Body:** { "status": "online", "location": { ... } }
+  - **Response:** { "success": true, "rider": { ... } }
+
+- **GET /api/rider/nearby-rides**
+  - Gets nearby ride requests (JWT required).
+  - **Response:** { "success": true, "rides": [ ... ] }
+
+- **POST /api/rider/rides/:rideId/accept**
+  - Accepts a ride request (JWT required).
+  - **Response:** { "success": true, "message": "Ride accepted" }
+
+- **POST /api/rider/rides/:rideId/start**
+  - Starts the ride with OTP (JWT required).
+  - **Request Body:** { "otp": "1234" }
+  - **Response:** { "success": true, "message": "Ride started" }
+
+- **POST /api/rider/rides/:rideId/complete**
+  - Completes the ride (JWT required).
+  - **Request Body:** { "dropLocation": { ... }, "finalFare": 68, "distance": 5.5, "duration": 18 }
+  - **Response:** { "success": true, "message": "Ride completed" }
+
+- **GET /api/rider/earnings**
+  - Gets earnings summary (JWT required).
+  - **Response:** { "success": true, "earnings": { ... } }
+
+## Rating APIs
+
+- **POST /api/ratings/ride**
+  - Rates a completed ride (JWT required).
+  - **Request Body:** { "rideId": "RIDE123456", "rating": 5, "feedback": "Excellent service", "tags": [ ... ] }
+  - **Response:** { "success": true, "message": "Rating submitted" }
+
+## Payment APIs
+
+- **POST /api/payments/methods**
+  - Adds a payment method (JWT required).
+  - **Request Body:** { "type": "upi", "details": { "upiId": "john@paytm" } }
+  - **Response:** { "success": true, "method": { ... } }
+
+- **GET /api/payments/methods**
+  - Gets saved payment methods (JWT required).
+  - **Response:** { "success": true, "methods": [ ... ] }
+
+- **POST /api/payments/process**
+  - Processes payment for a ride.
+  - **Request Body:** { "rideId": "RIDE123456", "paymentMethodId": 1, "amount": 68 }
+  - **Response:** { "success": true, "message": "Payment processed" }
+
+## Location Tracking APIs
+
+- **POST /api/tracking/update**
+  - Updates rider location during ride (JWT required).
+  - **Request Body:** { "rideId": "RIDE123456", "location": { ... }, "speed": 25, "heading": 45 }
+  - **Response:** { "success": true, "message": "Location updated" }
+
+- **GET /api/tracking/:rideId**
+  - Gets real-time ride tracking (JWT required).
+  - **Response:** { "success": true, "tracking": { ... } }
+
+## Admin APIs
+
+- **GET /api/admin/riders/pending**
+  - Gets riders pending verification.
+  - **Response:** { "success": true, "riders": [ ... ] }
+
+- **PUT /api/admin/riders/:riderId/verify**
+  - Verifies rider documents.
+  - **Request Body:** { "status": "verified" }
+  - **Response:** { "success": true, "message": "Rider verified" }
+
+- **GET /api/admin/analytics/rides**
+  - Gets ride analytics.
+  - **Response:** { "success": true, "analytics": { ... } } 

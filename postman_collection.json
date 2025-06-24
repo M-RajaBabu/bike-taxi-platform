@@ -1,19 +1,96 @@
 {
   "info": {
-    "_postman_id": "bike-taxi-platform-collection",
+    "_postman_id": "bike-taxi-platform-collection-v2",
     "name": "Bike Taxi Platform API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "A complete collection for testing the Bike Taxi Platform backend. Use the {{baseUrl}} variable for the API base URL and set JWT tokens in your environment."
   },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "USER_JWT", "value": "" },
+    { "key": "RIDER_JWT", "value": "" },
+    { "key": "ADMIN_JWT", "value": "" },
+    { "key": "RIDE_ID", "value": "1" },
+    { "key": "PAYMENT_METHOD_ID", "value": "1" }
+  ],
   "item": [
     {
+      "name": "Auth - User Registration (Send OTP)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/auth/user/send-otp",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+919876543210\",\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\"\n}" }
+      },
+      "description": "Send OTP for user registration."
+    },
+    {
+      "name": "Auth - User Registration (Verify OTP)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/auth/user/verify-otp",
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"session_123\",\n  \"otp\": \"1234\"\n}" }
+      },
+      "description": "Verify OTP and complete user registration."
+    },
+    {
+      "name": "Auth - User Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/auth/user/login",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+919876543210\"\n}" }
+      },
+      "description": "Login as a user to obtain JWT."
+    },
+    {
+      "name": "Auth - Rider Registration (Send OTP)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/auth/rider/send-otp",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+919876543220\",\n  \"name\": \"Captain Raj\",\n  \"email\": \"captain.raj@example.com\",\n  \"vehicle_number\": \"KA01AB1234\",\n  \"vehicle_model\": \"Honda Activa\",\n  \"vehicle_color\": \"White\"\n}" }
+      },
+      "description": "Send OTP for rider registration."
+    },
+    {
+      "name": "Auth - Rider Registration (Verify OTP)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/auth/rider/verify-otp",
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"session_456\",\n  \"otp\": \"1234\"\n}" }
+      },
+      "description": "Verify OTP and complete rider registration."
+    },
+    {
+      "name": "Auth - Rider Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/auth/rider/login",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+919876543220\"\n}" }
+      },
+      "description": "Login as a rider to obtain JWT."
+    },
+    {
       "name": "User - Get Profile",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/user/profile" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/user/profile"
+      }
     },
     {
       "name": "User - Update Profile",
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3000/api/user/profile",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/user/profile",
         "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Name\",\n  \"email\": \"new@email.com\"\n}" }
       }
     },
@@ -21,80 +98,43 @@
       "name": "User - Add Location",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/user/locations",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/user/locations",
         "body": { "mode": "raw", "raw": "{\n  \"type\": \"home\",\n  \"address\": \"123 Main St\",\n  \"latitude\": 12.9,\n  \"longitude\": 77.6,\n  \"landmark\": \"Near Park\"\n}" }
       }
     },
     {
       "name": "User - Get Locations",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/user/locations" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/user/locations"
+      }
     },
     {
       "name": "User - Add SOS Contact",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/user/sos-contacts",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/user/sos-contacts",
         "body": { "mode": "raw", "raw": "{\n  \"name\": \"Mom\",\n  \"phone\": \"+911234567890\",\n  \"relationship\": \"Mother\"\n}" }
       }
-    },
-    {
-      "name": "User - Get SOS Contacts",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/user/sos-contacts" }
-    },
-    {
-      "name": "Rider - Get Profile",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/rider/profile" }
-    },
-    {
-      "name": "Rider - Update Status",
-      "request": {
-        "method": "PUT",
-        "url": "http://localhost:3000/api/rider/status",
-        "body": { "mode": "raw", "raw": "{\n  \"status\": \"online\",\n  \"location\": { \"latitude\": 12.9, \"longitude\": 77.6 }\n}" }
-      }
-    },
-    {
-      "name": "Rider - Get Nearby Rides",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/rider/nearby-rides" }
-    },
-    {
-      "name": "Rider - Accept Ride",
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3000/api/rider/rides/1/accept"
-      }
-    },
-    {
-      "name": "Rider - Start Ride",
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3000/api/rider/rides/1/start",
-        "body": { "mode": "raw", "raw": "{\n  \"otp\": \"1234\"\n}" }
-      }
-    },
-    {
-      "name": "Rider - Complete Ride",
-      "request": {
-        "method": "POST",
-        "url": "http://localhost:3000/api/rider/rides/1/complete",
-        "body": { "mode": "raw", "raw": "{\n  \"dropLocation\": { \"latitude\": 12.9, \"longitude\": 77.6 },\n  \"finalFare\": 68,\n  \"distance\": 5.5,\n  \"duration\": 18\n}" }
-      }
-    },
-    {
-      "name": "Rider - Get Earnings",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/rider/earnings" }
     },
     {
       "name": "Ride - Estimate Fare",
       "request": {
         "method": "POST",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" }
-        ],
-        "url": "http://localhost:3000/api/rides/estimate",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": "{{baseUrl}}/rides/estimate",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"pickup_latitude\": 12.9,\n  \"pickup_longitude\": 77.6,\n  \"drop_latitude\": 12.8,\n  \"drop_longitude\": 77.5\n}"
+          "raw": "{\n  \"pickupLocation\": { \"latitude\": 12.9, \"longitude\": 77.6, \"address\": \"A\" },\n  \"dropLocation\": { \"latitude\": 12.8, \"longitude\": 77.5, \"address\": \"B\" },\n  \"rideType\": \"economy\"\n}"
         }
       }
     },
@@ -102,98 +142,223 @@
       "name": "Ride - Book Ride",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/rides/book",
-        "body": { "mode": "raw", "raw": "{\n  \"pickup_latitude\": 12.9,\n  \"pickup_longitude\": 77.6,\n  \"pickup_address\": \"A\",\n  \"drop_latitude\": 12.8,\n  \"drop_longitude\": 77.5,\n  \"drop_address\": \"B\"\n}" }
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/rides/book",
+        "body": { "mode": "raw", "raw": "{\n  \"pickupLocation\": { \"latitude\": 12.9, \"longitude\": 77.6, \"address\": \"A\" },\n  \"dropLocation\": { \"latitude\": 12.8, \"longitude\": 77.5, \"address\": \"B\" },\n  \"rideType\": \"economy\",\n  \"paymentMethod\": \"cash\",\n  \"promoCode\": \"FIRST50\"\n}" }
       }
     },
     {
       "name": "Ride - Get Current Ride",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/rides/current" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/rides/current"
+      }
     },
     {
       "name": "Ride - Get Ride History",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/rides/history" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/rides/history"
+      }
     },
     {
       "name": "Ride - Cancel Ride",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/rides/1/cancel"
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/rides/{{RIDE_ID}}/cancel",
+        "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Changed my mind\"\n}" }
       }
     },
     {
       "name": "Ride - Trigger SOS",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/rides/1/sos"
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/rides/{{RIDE_ID}}/sos"
       }
     },
     {
       "name": "Payment - Add Method",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/payments/methods",
-        "body": { "mode": "raw", "raw": "{\n  \"payment_type\": \"upi\",\n  \"payment_details\": \"{\\\"upi_id\\\":\\\"john@upi\\\"}\"\n}" }
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/payments/methods",
+        "body": { "mode": "raw", "raw": "{\n  \"type\": \"upi\",\n  \"details\": { \"upiId\": \"john@paytm\" }\n}" }
       }
     },
     {
       "name": "Payment - Get Methods",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/payments/methods" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/payments/methods"
+      }
     },
     {
       "name": "Payment - Process Payment",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/payments/process",
-        "body": { "mode": "raw", "raw": "{\n  \"ride_id\": 1,\n  \"payment_method_id\": 1\n}" }
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/payments/process",
+        "body": { "mode": "raw", "raw": "{\n  \"rideId\": {{RIDE_ID}},\n  \"paymentMethodId\": {{PAYMENT_METHOD_ID}},\n  \"amount\": 68\n}" }
       }
     },
     {
       "name": "Rating - Rate Ride",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/ratings/ride",
-        "body": { "mode": "raw", "raw": "{\n  \"ride_id\": 1,\n  \"rating\": 5,\n  \"comment\": \"Great ride!\"\n}" }
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{USER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/ratings/ride",
+        "body": { "mode": "raw", "raw": "{\n  \"rideId\": {{RIDE_ID}},\n  \"rating\": 5,\n  \"feedback\": \"Excellent service\",\n  \"tags\": [\"safe_driving\", \"polite\", \"on_time\"]\n}" }
       }
-    },
-    {
-      "name": "Rating - Get Ratings",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/ratings/" }
     },
     {
       "name": "Tracking - Update",
       "request": {
         "method": "POST",
-        "url": "http://localhost:3000/api/tracking/update",
-        "body": { "mode": "raw", "raw": "{\n  \"rideId\": 1,\n  \"location\": { \"latitude\": 12.9, \"longitude\": 77.6 },\n  \"speed\": 25,\n  \"heading\": 45\n}" }
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/tracking/update",
+        "body": { "mode": "raw", "raw": "{\n  \"rideId\": {{RIDE_ID}},\n  \"location\": { \"latitude\": 12.9, \"longitude\": 77.6 },\n  \"speed\": 25,\n  \"heading\": 45\n}" }
       }
     },
     {
       "name": "Tracking - Get",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/tracking/1" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{USER_JWT}}" } ],
+        "url": "{{baseUrl}}/tracking/{{RIDE_ID}}"
+      }
     },
     {
       "name": "Admin - Get Pending Riders",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/admin/riders/pending" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{ADMIN_JWT}}" } ],
+        "url": "{{baseUrl}}/admin/riders/pending"
+      }
     },
     {
       "name": "Admin - Verify Rider",
       "request": {
         "method": "PUT",
-        "url": "http://localhost:3000/api/admin/riders/1/verify"
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{ADMIN_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/admin/riders/1/verify",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"verified\"\n}" }
       }
     },
     {
       "name": "Admin - Get Ride Analytics",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/admin/analytics/rides" }
-    },
-    {
-      "name": "Admin - Get Dashboard",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/admin/dashboard" }
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{ADMIN_JWT}}" } ],
+        "url": "{{baseUrl}}/admin/analytics/rides"
+      }
     },
     {
       "name": "Health Check",
-      "request": { "method": "GET", "url": "http://localhost:3000/api/health" }
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Rider - Get Profile",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" } ],
+        "url": "{{baseUrl}}/rider/profile"
+      },
+      "description": "Get rider profile."
+    },
+    {
+      "name": "Rider - Update Status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/rider/status",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"online\",\n  \"location\": { \"latitude\": 12.9, \"longitude\": 77.6 }\n}" }
+      },
+      "description": "Update rider status (online/offline)."
+    },
+    {
+      "name": "Rider - Get Nearby Rides",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" } ],
+        "url": "{{baseUrl}}/rider/nearby-rides"
+      },
+      "description": "Get nearby ride requests for rider."
+    },
+    {
+      "name": "Rider - Accept Ride",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" } ],
+        "url": "{{baseUrl}}/rider/rides/{{RIDE_ID}}/accept"
+      },
+      "description": "Accept a ride request."
+    },
+    {
+      "name": "Rider - Start Ride",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/rider/rides/{{RIDE_ID}}/start",
+        "body": { "mode": "raw", "raw": "{\n  \"otp\": \"1234\"\n}" }
+      },
+      "description": "Start the ride with OTP."
+    },
+    {
+      "name": "Rider - Complete Ride",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/rider/rides/{{RIDE_ID}}/complete",
+        "body": { "mode": "raw", "raw": "{\n  \"dropLocation\": { \"latitude\": 12.9165, \"longitude\": 77.6101 },\n  \"finalFare\": 68,\n  \"distance\": 5.5,\n  \"duration\": 18\n}" }
+      },
+      "description": "Complete the ride."
+    },
+    {
+      "name": "Rider - Get Earnings",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{RIDER_JWT}}" } ],
+        "url": "{{baseUrl}}/rider/earnings"
+      },
+      "description": "Get rider earnings summary."
     }
   ]
 } 
